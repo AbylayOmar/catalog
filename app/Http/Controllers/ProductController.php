@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 
@@ -16,9 +18,9 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return ProductResource::collection(Product::all());
+        return ProductResource::collection(Product::filter($request->filter)->get());
     }
 
     /**
@@ -50,7 +52,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        return new ProductResource($product);
     }
 
     /**

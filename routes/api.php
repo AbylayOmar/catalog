@@ -9,6 +9,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 
+use App\Models\Product;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +28,9 @@ Route::post('/register',[AuthController::class,'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::apiResource('/category', CategoryController::class);
+
 Route::apiResource('/product', ProductController::class);
+Route::get('/product/slug/{product:slug}', [ProductController::class, 'show']);
+
 Route::apiResource('/cart', CartController::class);
 Route::apiResource('/order', OrderController::class);
