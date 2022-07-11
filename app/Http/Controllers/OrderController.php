@@ -4,39 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
+use App\Http\Resources\OrderCollection;
+use App\Http\Resources\OrderResource;
+
 use App\Models\Order;
 
 class OrderController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * returns orders of user
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreOrderRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreOrderRequest $request)
-    {
-        //
+        $userOrders = Order::where('user_id', auth()->id())->get();
+        return new OrderCollection($userOrders);
     }
 
     /**
@@ -47,40 +30,12 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Order $order)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateOrderRequest  $request
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateOrderRequest $request, Order $order)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Order $order)
-    {
-        //
+        if($order->userID == auth()->id()){
+            return new OrderResource($order);
+        }else{
+           return response()->json([
+               'message' => 'The order you\'re trying to view doesn\'t seem to be yours, hmmmm.',
+           ], 403);
+        }
     }
 }
