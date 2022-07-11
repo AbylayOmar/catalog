@@ -10,6 +10,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 
 use App\Models\Product;
+use App\Models\Cart;
 
 
 /*
@@ -32,5 +33,8 @@ Route::apiResource('/category', CategoryController::class);
 Route::apiResource('/product', ProductController::class);
 Route::get('/product/slug/{product:slug}', [ProductController::class, 'show']);
 
-Route::apiResource('/cart', CartController::class);
-Route::apiResource('/order', OrderController::class);
+Route::apiResource('/cart', CartController::class)->except(['update', 'index']);
+Route::apiResource('/order', OrderController::class)->except(['update', 'destroy','store'])->middleware('auth:sanctum');
+
+Route::post('/cart/{cart}', [CartController::class, 'addProducts']);
+Route::post('/cart/{cart}/checkout', [CartController::class, 'checkout']);
